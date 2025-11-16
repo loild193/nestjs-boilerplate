@@ -30,68 +30,76 @@ import { DatabaseConfig } from './database/config/database-config.type';
 
 // <database-block>
 const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
-  .isDocumentDatabase
-  ? MongooseModule.forRootAsync({
-      useClass: MongooseConfigService,
-    })
-  : TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
-      dataSourceFactory: async (options: DataSourceOptions) => {
-        return new DataSource(options).initialize();
-      },
-    });
+    .isDocumentDatabase
+    ? MongooseModule.forRootAsync({
+          useClass: MongooseConfigService,
+      })
+    : TypeOrmModule.forRootAsync({
+          useClass: TypeOrmConfigService,
+          dataSourceFactory: async (options: DataSourceOptions) => {
+              return new DataSource(options).initialize();
+          },
+      });
 // </database-block>
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [
-        databaseConfig,
-        authConfig,
-        appConfig,
-        mailConfig,
-        fileConfig,
-        facebookConfig,
-        googleConfig,
-        appleConfig,
-      ],
-      envFilePath: ['.env'],
-    }),
-    infrastructureDatabaseModule,
-    I18nModule.forRootAsync({
-      useFactory: (configService: ConfigService<AllConfigType>) => ({
-        fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
-          infer: true,
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            load: [
+                databaseConfig,
+                authConfig,
+                appConfig,
+                mailConfig,
+                fileConfig,
+                facebookConfig,
+                googleConfig,
+                appleConfig,
+            ],
+            envFilePath: ['.env'],
         }),
-        loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
-      }),
-      resolvers: [
-        {
-          use: HeaderResolver,
-          useFactory: (configService: ConfigService<AllConfigType>) => {
-            return [
-              configService.get('app.headerLanguage', {
-                infer: true,
-              }),
-            ];
-          },
-          inject: [ConfigService],
-        },
-      ],
-      imports: [ConfigModule],
-      inject: [ConfigService],
-    }),
-    UsersModule,
-    FilesModule,
-    AuthModule,
-    AuthFacebookModule,
-    AuthGoogleModule,
-    AuthAppleModule,
-    SessionModule,
-    MailModule,
-    MailerModule,
-    HomeModule,
-  ],
+        infrastructureDatabaseModule,
+        I18nModule.forRootAsync({
+            useFactory: (configService: ConfigService<AllConfigType>) => ({
+                fallbackLanguage: configService.getOrThrow(
+                    'app.fallbackLanguage',
+                    {
+                        infer: true,
+                    },
+                ),
+                loaderOptions: {
+                    path: path.join(__dirname, '/i18n/'),
+                    watch: true,
+                },
+            }),
+            resolvers: [
+                {
+                    use: HeaderResolver,
+                    useFactory: (
+                        configService: ConfigService<AllConfigType>,
+                    ) => {
+                        return [
+                            configService.get('app.headerLanguage', {
+                                infer: true,
+                            }),
+                        ];
+                    },
+                    inject: [ConfigService],
+                },
+            ],
+            imports: [ConfigModule],
+            inject: [ConfigService],
+        }),
+        UsersModule,
+        FilesModule,
+        AuthModule,
+        AuthFacebookModule,
+        AuthGoogleModule,
+        AuthAppleModule,
+        SessionModule,
+        MailModule,
+        MailerModule,
+        HomeModule,
+    ],
 })
 export class AppModule {}

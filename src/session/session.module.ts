@@ -1,6 +1,6 @@
 import {
-  // common
-  Module,
+    // common
+    Module,
 } from '@nestjs/common';
 
 import { DocumentSessionPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
@@ -11,14 +11,14 @@ import databaseConfig from '../database/config/database.config';
 
 // <database-block>
 const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-  .isDocumentDatabase
-  ? DocumentSessionPersistenceModule
-  : RelationalSessionPersistenceModule;
+    .isDocumentDatabase
+    ? DocumentSessionPersistenceModule
+    : RelationalSessionPersistenceModule;
 // </database-block>
 
 @Module({
-  imports: [infrastructurePersistenceModule],
-  providers: [SessionService],
-  exports: [SessionService, infrastructurePersistenceModule],
+    imports: [infrastructurePersistenceModule],
+    providers: [SessionService],
+    exports: [SessionService, infrastructurePersistenceModule],
 })
 export class SessionModule {}

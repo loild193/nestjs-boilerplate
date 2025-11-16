@@ -1,6 +1,6 @@
 import {
-  // common
-  Module,
+    // common
+    Module,
 } from '@nestjs/common';
 
 import { UsersController } from './users.controller';
@@ -14,19 +14,19 @@ import { FilesModule } from '../files/files.module';
 
 // <database-block>
 const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-  .isDocumentDatabase
-  ? DocumentUserPersistenceModule
-  : RelationalUserPersistenceModule;
+    .isDocumentDatabase
+    ? DocumentUserPersistenceModule
+    : RelationalUserPersistenceModule;
 // </database-block>
 
 @Module({
-  imports: [
-    // import modules, etc.
-    infrastructurePersistenceModule,
-    FilesModule,
-  ],
-  controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService, infrastructurePersistenceModule],
+    imports: [
+        // import modules, etc.
+        infrastructurePersistenceModule,
+        FilesModule,
+    ],
+    controllers: [UsersController],
+    providers: [UsersService],
+    exports: [UsersService, infrastructurePersistenceModule],
 })
 export class UsersModule {}

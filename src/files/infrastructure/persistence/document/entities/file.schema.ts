@@ -5,14 +5,14 @@ import { EntityDocumentHelper } from '../../../../../utils/document-entity-helpe
 export type FileSchemaDocument = HydratedDocument<FileSchemaClass>;
 
 @Schema({
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
+    toJSON: {
+        virtuals: true,
+        getters: true,
+    },
 })
 export class FileSchemaClass extends EntityDocumentHelper {
-  @Prop()
-  path: string;
+    @Prop()
+    path: string;
 }
 
 export const FileSchema = SchemaFactory.createForClass(FileSchemaClass);

@@ -1,6 +1,6 @@
 import {
-  // common
-  Module,
+    // common
+    Module,
 } from '@nestjs/common';
 
 import { DocumentFilePersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
@@ -16,25 +16,25 @@ import databaseConfig from '../database/config/database.config';
 
 // <database-block>
 const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-  .isDocumentDatabase
-  ? DocumentFilePersistenceModule
-  : RelationalFilePersistenceModule;
+    .isDocumentDatabase
+    ? DocumentFilePersistenceModule
+    : RelationalFilePersistenceModule;
 // </database-block>
 
 const infrastructureUploaderModule =
-  (fileConfig() as FileConfig).driver === FileDriver.LOCAL
-    ? FilesLocalModule
-    : (fileConfig() as FileConfig).driver === FileDriver.S3
-      ? FilesS3Module
-      : FilesS3PresignedModule;
+    (fileConfig() as FileConfig).driver === FileDriver.LOCAL
+        ? FilesLocalModule
+        : (fileConfig() as FileConfig).driver === FileDriver.S3
+          ? FilesS3Module
+          : FilesS3PresignedModule;
 
 @Module({
-  imports: [
-    // import modules, etc.
-    infrastructurePersistenceModule,
-    infrastructureUploaderModule,
-  ],
-  providers: [FilesService],
-  exports: [FilesService, infrastructurePersistenceModule],
+    imports: [
+        // import modules, etc.
+        infrastructurePersistenceModule,
+        infrastructureUploaderModule,
+    ],
+    providers: [FilesService],
+    exports: [FilesService, infrastructurePersistenceModule],
 })
 export class FilesModule {}

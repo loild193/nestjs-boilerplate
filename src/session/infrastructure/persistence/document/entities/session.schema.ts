@@ -6,27 +6,27 @@ import { EntityDocumentHelper } from '../../../../../utils/document-entity-helpe
 export type SessionSchemaDocument = HydratedDocument<SessionSchemaClass>;
 
 @Schema({
-  timestamps: true,
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        getters: true,
+    },
 })
 export class SessionSchemaClass extends EntityDocumentHelper {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'UserSchemaClass' })
-  user: UserSchemaClass;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'UserSchemaClass' })
+    user: UserSchemaClass;
 
-  @Prop()
-  hash: string;
+    @Prop()
+    hash: string;
 
-  @Prop({ default: now })
-  createdAt: Date;
+    @Prop({ default: now })
+    createdAt: Date;
 
-  @Prop({ default: now })
-  updatedAt: Date;
+    @Prop({ default: now })
+    updatedAt: Date;
 
-  @Prop()
-  deletedAt: Date;
+    @Prop()
+    deletedAt: Date;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionSchemaClass);
