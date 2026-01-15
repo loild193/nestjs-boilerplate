@@ -1,28 +1,21 @@
-import {
-    HttpStatus,
-    Module,
-    UnprocessableEntityException,
-} from '@nestjs/common';
-import { FilesS3PresignedController } from './files.controller';
-import { MulterModule } from '@nestjs/platform-express';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import { S3Client } from '@aws-sdk/client-s3';
-import multerS3 from 'multer-s3';
-
-import { FilesS3PresignedService } from './files.service';
-
-import { DocumentFilePersistenceModule } from '../../persistence/document/document-persistence.module';
-import { RelationalFilePersistenceModule } from '../../persistence/relational/relational-persistence.module';
-import { AllConfigType } from '../../../../config/config.type';
-import { DatabaseConfig } from '../../../../database/config/database-config.type';
-import databaseConfig from '../../../../database/config/database.config';
+import { S3Client } from '@aws-sdk/client-s3'
+import { HttpStatus, Module, UnprocessableEntityException } from '@nestjs/common'
+import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { MulterModule } from '@nestjs/platform-express'
+import multerS3 from 'multer-s3'
+import { AllConfigType } from '~/config/config.type'
+import { DatabaseConfig } from '~/database/config/database-config.type'
+import databaseConfig from '~/database/config/database.config'
+import { DocumentFilePersistenceModule } from '~/files/infrastructure/persistence/document/document-persistence.module'
+import { RelationalFilePersistenceModule } from '~/files/infrastructure/persistence/relational/relational-persistence.module'
+import { FilesS3PresignedController } from '~/files/infrastructure/uploader/s3-presigned/files.controller'
+import { FilesS3PresignedService } from '~/files/infrastructure/uploader/s3-presigned/files.service'
 
 // <database-block>
-const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-    .isDocumentDatabase
+const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig).isDocumentDatabase
     ? DocumentFilePersistenceModule
-    : RelationalFilePersistenceModule;
+    : RelationalFilePersistenceModule
 // </database-block>
 
 @Module({
@@ -37,26 +30,18 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
                         infer: true,
                     }),
                     credentials: {
-                        accessKeyId: configService.getOrThrow(
-                            'file.accessKeyId',
-                            {
-                                infer: true,
-                            },
-                        ),
-                        secretAccessKey: configService.getOrThrow(
-                            'file.secretAccessKey',
-                            {
-                                infer: true,
-                            },
-                        ),
+                        accessKeyId: configService.getOrThrow('file.accessKeyId', {
+                            infer: true,
+                        }),
+                        secretAccessKey: configService.getOrThrow('file.secretAccessKey', {
+                            infer: true,
+                        }),
                     },
-                });
+                })
 
                 return {
                     fileFilter: (request, file, callback) => {
-                        if (
-                            !file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)
-                        ) {
+                        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
                             return callback(
                                 new UnprocessableEntityException({
                                     status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -65,10 +50,10 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
                                     },
                                 }),
                                 false,
-                            );
+                            )
                         }
 
-                        callback(null, true);
+                        callback(null, true)
                     },
                     storage: multerS3({
                         s3: s3,
@@ -78,11 +63,8 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
                         key: (request, file, callback) => {
                             callback(
                                 null,
-                                `${randomStringGenerator()}.${file.originalname
-                                    .split('.')
-                                    .pop()
-                                    ?.toLowerCase()}`,
-                            );
+                                `${randomStringGenerator()}.${file.originalname.split('.').pop()?.toLowerCase()}`,
+                            )
                         },
                     }),
                     limits: {
@@ -90,7 +72,7 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
                             infer: true,
                         }),
                     },
-                };
+                }
             },
         }),
     ],

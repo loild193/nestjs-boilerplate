@@ -1,27 +1,26 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import globals from 'globals';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
+import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
+import noRelativeImportPathsPlugin from 'eslint-plugin-no-relative-import-paths'
+import globals from 'globals'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
     allConfig: js.configs.all,
-});
+})
 
 export default [
-    ...compat.extends(
-        'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended',
-    ),
+    ...compat.extends('plugin:@typescript-eslint/recommended', 'prettier'),
     {
         plugins: {
             '@typescript-eslint': tsEslintPlugin,
+            'no-relative-import-paths': noRelativeImportPathsPlugin,
         },
         languageOptions: {
             globals: {
@@ -37,29 +36,29 @@ export default [
             },
         },
         rules: {
-            '@typescript-eslint/interface-name-prefix': 'off',
-            '@typescript-eslint/explicit-function-return-type': 'off',
-            '@typescript-eslint/explicit-module-boundary-types': 'off',
-            '@typescript-eslint/no-explicit-any': 'off',
-            'no-unused-vars': 'off',
-            '@typescript-eslint/no-unused-vars': ['error'],
-            'require-await': 'off',
-            '@typescript-eslint/require-await': 'error',
-            '@typescript-eslint/no-floating-promises': 'error',
-            'no-restricted-syntax': [
-                'error',
+            '@typescript-eslint/no-empty-interface': 0,
+            '@typescript-eslint/ban-types': 0,
+            '@typescript-eslint/no-inferrable-types': 0,
+            '@typescript-eslint/no-var-requires': 0,
+            '@typescript-eslint/no-this-alias': 0,
+            '@typescript-eslint/no-explicit-any': 1,
+            '@typescript-eslint/no-empty-object-type': 0,
+            '@typescript-eslint/no-unused-expressions': 0,
+            '@typescript-eslint/no-require-imports': 0,
+            '@typescript-eslint/no-unused-vars': 0,
+            'no-extra-boolean-cast': 0,
+            'no-prototype-builtins': 0,
+            'no-useless-catch': 0,
+            'no-useless-escape': 0,
+            'prefer-const': 0,
+            'no-relative-import-paths/no-relative-import-paths': [
+                2,
                 {
-                    selector:
-                        'CallExpression[callee.object.name=configService][callee.property.name=/^(get|getOrThrow)$/]:not(:has([arguments.1] Property[key.name=infer][value.value=true])), CallExpression[callee.object.property.name=configService][callee.property.name=/^(get|getOrThrow)$/]:not(:has([arguments.1] Property[key.name=infer][value.value=true]))',
-                    message:
-                        'Add "{ infer: true }" to configService.get() for correct typechecking. Example: configService.get("database.port", { infer: true })',
-                },
-                {
-                    selector:
-                        'CallExpression[callee.name=it][arguments.0.value!=/^should/]',
-                    message: '"it" should start with "should"',
+                    allowSameFolder: false,
+                    rootDir: 'src',
+                    prefix: '~',
                 },
             ],
         },
     },
-];
+]

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { AllConfigType } from '../config/config.type';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
+import { AllConfigType } from '~/config/config.type'
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -25,9 +25,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             }),
             dropSchema: false,
             keepConnectionAlive: true,
-            logging:
-                this.configService.get('app.nodeEnv', { infer: true }) !==
-                'production',
+            logging: this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
             entities: [__dirname + '/../**/*.entity{.ts,.js}'],
             migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
             cli: {
@@ -45,10 +43,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
                     infer: true,
                 })
                     ? {
-                          rejectUnauthorized: this.configService.get(
-                              'database.rejectUnauthorized',
-                              { infer: true },
-                          ),
+                          rejectUnauthorized: this.configService.get('database.rejectUnauthorized', { infer: true }),
                           ca:
                               this.configService.get('database.ca', {
                                   infer: true,
@@ -64,6 +59,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
                       }
                     : undefined,
             },
-        } as TypeOrmModuleOptions;
+        } as TypeOrmModuleOptions
     }
 }

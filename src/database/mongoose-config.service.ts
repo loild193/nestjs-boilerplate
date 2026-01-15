@@ -1,11 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import {
-    MongooseModuleOptions,
-    MongooseOptionsFactory,
-} from '@nestjs/mongoose';
-import { AllConfigType } from '../config/config.type';
-import mongooseAutoPopulate from 'mongoose-autopopulate';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { MongooseModuleOptions, MongooseOptionsFactory } from '@nestjs/mongoose'
+import mongooseAutoPopulate from 'mongoose-autopopulate'
+import { AllConfigType } from '~/config/config.type'
 
 @Injectable()
 export class MongooseConfigService implements MongooseOptionsFactory {
@@ -18,9 +15,9 @@ export class MongooseConfigService implements MongooseOptionsFactory {
             user: this.configService.get('database.username', { infer: true }),
             pass: this.configService.get('database.password', { infer: true }),
             connectionFactory(connection) {
-                connection.plugin(mongooseAutoPopulate);
-                return connection;
+                connection.plugin(mongooseAutoPopulate)
+                return connection
             },
-        };
+        }
     }
 }

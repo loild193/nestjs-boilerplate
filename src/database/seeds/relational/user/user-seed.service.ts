@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-
-import { Repository } from 'typeorm';
-import bcrypt from 'bcryptjs';
-import { RoleEnum } from '../../../../roles/roles.enum';
-import { StatusEnum } from '../../../../statuses/statuses.enum';
-import { UserEntity } from '../../../../users/infrastructure/persistence/relational/entities/user.entity';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import bcrypt from 'bcryptjs'
+import { Repository } from 'typeorm'
+import { StatusEnum } from '~/statuses/statuses.enum'
+import { RoleEnum } from '~/roles/roles.enum'
+import { UserEntity } from '~/users/infrastructure/persistence/relational/entities/user.entity'
 
 @Injectable()
 export class UserSeedService {
@@ -21,11 +20,11 @@ export class UserSeedService {
                     id: RoleEnum.admin,
                 },
             },
-        });
+        })
 
         if (!countAdmin) {
-            const salt = await bcrypt.genSalt();
-            const password = await bcrypt.hash('secret', salt);
+            const salt = await bcrypt.genSalt()
+            const password = await bcrypt.hash('secret', salt)
 
             await this.repository.save(
                 this.repository.create({
@@ -42,7 +41,7 @@ export class UserSeedService {
                         name: 'Active',
                     },
                 }),
-            );
+            )
         }
 
         const countUser = await this.repository.count({
@@ -51,11 +50,11 @@ export class UserSeedService {
                     id: RoleEnum.user,
                 },
             },
-        });
+        })
 
         if (!countUser) {
-            const salt = await bcrypt.genSalt();
-            const password = await bcrypt.hash('secret', salt);
+            const salt = await bcrypt.genSalt()
+            const password = await bcrypt.hash('secret', salt)
 
             await this.repository.save(
                 this.repository.create({
@@ -72,7 +71,7 @@ export class UserSeedService {
                         name: 'Active',
                     },
                 }),
-            );
+            )
         }
     }
 }

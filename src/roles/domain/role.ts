@@ -1,12 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Allow } from 'class-validator';
-import databaseConfig from '../../database/config/database.config';
-import { DatabaseConfig } from '../../database/config/database-config.type';
+import { ApiProperty } from '@nestjs/swagger'
+import { Allow } from 'class-validator'
+import { DatabaseConfig } from '~/database/config/database-config.type'
+import databaseConfig from '~/database/config/database.config'
 
 // <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-    ? String
-    : Number;
+const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase ? String : Number
 // </database-block>
 
 export class Role {
@@ -14,12 +12,12 @@ export class Role {
     @ApiProperty({
         type: idType,
     })
-    id: number | string;
+    id: number | string
 
     @Allow()
     @ApiProperty({
         type: String,
         example: 'admin',
     })
-    name?: string;
+    name?: string
 }

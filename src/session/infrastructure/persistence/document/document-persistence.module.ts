@@ -1,15 +1,14 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { SessionSchema, SessionSchemaClass } from './entities/session.schema';
-import { SessionRepository } from '../session.repository';
-import { SessionDocumentRepository } from './repositories/session.repository';
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import {
+    SessionSchema,
+    SessionSchemaClass,
+} from '~/session/infrastructure/persistence/document/entities/session.schema'
+import { SessionDocumentRepository } from '~/session/infrastructure/persistence/document/repositories/session.repository'
+import { SessionRepository } from '~/session/infrastructure/persistence/session.repository'
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: SessionSchemaClass.name, schema: SessionSchema },
-        ]),
-    ],
+    imports: [MongooseModule.forFeature([{ name: SessionSchemaClass.name, schema: SessionSchema }])],
     providers: [
         {
             provide: SessionRepository,

@@ -1,40 +1,30 @@
 import {
-    Controller,
-    Get,
-    Post,
     Body,
-    Patch,
-    Param,
+    Controller,
     Delete,
-    UseGuards,
-    Query,
-    HttpStatus,
+    Get,
     HttpCode,
+    HttpStatus,
+    Param,
+    Patch,
+    Post,
+    Query,
     SerializeOptions,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import {
-    ApiBearerAuth,
-    ApiCreatedResponse,
-    ApiOkResponse,
-    ApiParam,
-    ApiTags,
-} from '@nestjs/swagger';
-import { Roles } from '../roles/roles.decorator';
-import { RoleEnum } from '../roles/roles.enum';
-import { AuthGuard } from '@nestjs/passport';
-
-import {
-    InfinityPaginationResponse,
-    InfinityPaginationResponseDto,
-} from '../utils/dto/infinity-pagination-response.dto';
-import { NullableType } from '../utils/types/nullable.type';
-import { QueryUserDto } from './dto/query-user.dto';
-import { User } from './domain/user';
-import { UsersService } from './users.service';
-import { RolesGuard } from '../roles/roles.guard';
-import { infinityPagination } from '../utils/infinity-pagination';
+    UseGuards,
+} from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger'
+import { Roles } from '~/roles/roles.decorator'
+import { RoleEnum } from '~/roles/roles.enum'
+import { RolesGuard } from '~/roles/roles.guard'
+import { User } from '~/users/domain/user'
+import { CreateUserDto } from '~/users/dto/create-user.dto'
+import { QueryUserDto } from '~/users/dto/query-user.dto'
+import { UpdateUserDto } from '~/users/dto/update-user.dto'
+import { UsersService } from '~/users/users.service'
+import { InfinityPaginationResponse, InfinityPaginationResponseDto } from '~/utils/dto/infinity-pagination-response.dto'
+import { infinityPagination } from '~/utils/infinity-pagination'
+import { NullableType } from '~/utils/types/nullable.type'
 
 @ApiBearerAuth()
 @Roles(RoleEnum.admin)
@@ -56,7 +46,7 @@ export class UsersController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() createProfileDto: CreateUserDto): Promise<User> {
-        return this.usersService.create(createProfileDto);
+        return this.usersService.create(createProfileDto)
     }
 
     @ApiOkResponse({
@@ -67,13 +57,11 @@ export class UsersController {
     })
     @Get()
     @HttpCode(HttpStatus.OK)
-    async findAll(
-        @Query() query: QueryUserDto,
-    ): Promise<InfinityPaginationResponseDto<User>> {
-        const page = query?.page ?? 1;
-        let limit = query?.limit ?? 10;
+    async findAll(@Query() query: QueryUserDto): Promise<InfinityPaginationResponseDto<User>> {
+        const page = query?.page ?? 1
+        let limit = query?.limit ?? 10
         if (limit > 50) {
-            limit = 50;
+            limit = 50
         }
 
         return infinityPagination(
@@ -86,7 +74,7 @@ export class UsersController {
                 },
             }),
             { page, limit },
-        );
+        )
     }
 
     @ApiOkResponse({
@@ -103,7 +91,7 @@ export class UsersController {
         required: true,
     })
     findOne(@Param('id') id: User['id']): Promise<NullableType<User>> {
-        return this.usersService.findById(id);
+        return this.usersService.findById(id)
     }
 
     @ApiOkResponse({
@@ -119,11 +107,8 @@ export class UsersController {
         type: String,
         required: true,
     })
-    update(
-        @Param('id') id: User['id'],
-        @Body() updateProfileDto: UpdateUserDto,
-    ): Promise<User | null> {
-        return this.usersService.update(id, updateProfileDto);
+    update(@Param('id') id: User['id'], @Body() updateProfileDto: UpdateUserDto): Promise<User | null> {
+        return this.usersService.update(id, updateProfileDto)
     }
 
     @Delete(':id')
@@ -134,6 +119,6 @@ export class UsersController {
     })
     @HttpCode(HttpStatus.NO_CONTENT)
     remove(@Param('id') id: User['id']): Promise<void> {
-        return this.usersService.remove(id);
+        return this.usersService.remove(id)
     }
 }

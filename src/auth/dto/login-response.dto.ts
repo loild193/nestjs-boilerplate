@@ -1,18 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../users/domain/user';
+import { ApiProperty } from '@nestjs/swagger'
+import { User } from '~/users/domain/user'
 
 export class LoginResponseDto {
     @ApiProperty()
-    token: string;
+    token: string
 
     @ApiProperty()
-    refreshToken: string;
+    refreshToken: string
 
     @ApiProperty()
-    tokenExpires: number;
+    tokenExpires: number
 
     @ApiProperty({
         type: () => User,
     })
-    user: User;
+    user: User
 }

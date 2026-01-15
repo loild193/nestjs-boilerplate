@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import bcrypt from 'bcryptjs';
-import { Model } from 'mongoose';
-import { RoleEnum } from '../../../../roles/roles.enum';
-import { StatusEnum } from '../../../../statuses/statuses.enum';
-import { UserSchemaClass } from '../../../../users/infrastructure/persistence/document/entities/user.schema';
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import bcrypt from 'bcryptjs'
+import { Model } from 'mongoose'
+import { StatusEnum } from '~/statuses/statuses.enum'
+import { RoleEnum } from '~/roles/roles.enum'
+import { UserSchemaClass } from '~/users/infrastructure/persistence/document/entities/user.schema'
 
 @Injectable()
 export class UserSeedService {
@@ -16,11 +16,11 @@ export class UserSeedService {
     async run() {
         const admin = await this.model.findOne({
             email: 'admin@example.com',
-        });
+        })
 
         if (!admin) {
-            const salt = await bcrypt.genSalt();
-            const password = await bcrypt.hash('secret', salt);
+            const salt = await bcrypt.genSalt()
+            const password = await bcrypt.hash('secret', salt)
 
             const data = new this.model({
                 email: 'admin@example.com',
@@ -33,17 +33,17 @@ export class UserSeedService {
                 status: {
                     _id: StatusEnum.active.toString(),
                 },
-            });
-            await data.save();
+            })
+            await data.save()
         }
 
         const user = await this.model.findOne({
             email: 'john.doe@example.com',
-        });
+        })
 
         if (!user) {
-            const salt = await bcrypt.genSalt();
-            const password = await bcrypt.hash('secret', salt);
+            const salt = await bcrypt.genSalt()
+            const password = await bcrypt.hash('secret', salt)
 
             const data = new this.model({
                 email: 'john.doe@example.com',
@@ -56,9 +56,9 @@ export class UserSeedService {
                 status: {
                     _id: StatusEnum.active.toString(),
                 },
-            });
+            })
 
-            await data.save();
+            await data.save()
         }
     }
 }

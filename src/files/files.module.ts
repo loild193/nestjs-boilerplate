@@ -1,24 +1,22 @@
 import {
     // common
     Module,
-} from '@nestjs/common';
-
-import { DocumentFilePersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { RelationalFilePersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { FilesService } from './files.service';
-import fileConfig from './config/file.config';
-import { FileConfig, FileDriver } from './config/file-config.type';
-import { FilesLocalModule } from './infrastructure/uploader/local/files.module';
-import { FilesS3Module } from './infrastructure/uploader/s3/files.module';
-import { FilesS3PresignedModule } from './infrastructure/uploader/s3-presigned/files.module';
-import { DatabaseConfig } from '../database/config/database-config.type';
-import databaseConfig from '../database/config/database.config';
+} from '@nestjs/common'
+import { DatabaseConfig } from '~/database/config/database-config.type'
+import databaseConfig from '~/database/config/database.config'
+import { FileConfig, FileDriver } from '~/files/config/file-config.type'
+import fileConfig from '~/files/config/file.config'
+import { FilesService } from '~/files/files.service'
+import { DocumentFilePersistenceModule } from '~/files/infrastructure/persistence/document/document-persistence.module'
+import { RelationalFilePersistenceModule } from '~/files/infrastructure/persistence/relational/relational-persistence.module'
+import { FilesLocalModule } from '~/files/infrastructure/uploader/local/files.module'
+import { FilesS3PresignedModule } from '~/files/infrastructure/uploader/s3-presigned/files.module'
+import { FilesS3Module } from '~/files/infrastructure/uploader/s3/files.module'
 
 // <database-block>
-const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-    .isDocumentDatabase
+const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig).isDocumentDatabase
     ? DocumentFilePersistenceModule
-    : RelationalFilePersistenceModule;
+    : RelationalFilePersistenceModule
 // </database-block>
 
 const infrastructureUploaderModule =
@@ -26,7 +24,7 @@ const infrastructureUploaderModule =
         ? FilesLocalModule
         : (fileConfig() as FileConfig).driver === FileDriver.S3
           ? FilesS3Module
-          : FilesS3PresignedModule;
+          : FilesS3PresignedModule
 
 @Module({
     imports: [

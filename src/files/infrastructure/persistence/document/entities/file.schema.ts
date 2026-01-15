@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { HydratedDocument } from 'mongoose'
+import { EntityDocumentHelper } from '~/utils/document-entity-helper'
 
-export type FileSchemaDocument = HydratedDocument<FileSchemaClass>;
+export type FileSchemaDocument = HydratedDocument<FileSchemaClass>
 
 @Schema({
     toJSON: {
@@ -12,7 +12,7 @@ export type FileSchemaDocument = HydratedDocument<FileSchemaClass>;
 })
 export class FileSchemaClass extends EntityDocumentHelper {
     @Prop()
-    path: string;
+    path: string
 }
 
-export const FileSchema = SchemaFactory.createForClass(FileSchemaClass);
+export const FileSchema = SchemaFactory.createForClass(FileSchemaClass)

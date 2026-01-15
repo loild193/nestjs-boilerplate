@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import fs from 'node:fs/promises';
-import { ConfigService } from '@nestjs/config';
-import nodemailer from 'nodemailer';
-import Handlebars from 'handlebars';
-import { AllConfigType } from '../config/config.type';
+import fs from 'node:fs/promises'
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import Handlebars from 'handlebars'
+import nodemailer from 'nodemailer'
+import { AllConfigType } from '~/config/config.type'
 
 @Injectable()
 export class MailerService {
-    private readonly transporter: nodemailer.Transporter;
+    private readonly transporter: nodemailer.Transporter
     constructor(private readonly configService: ConfigService<AllConfigType>) {
         this.transporter = nodemailer.createTransport({
             host: configService.get('mail.host', { infer: true }),
@@ -19,7 +19,7 @@ export class MailerService {
                 user: configService.get('mail.user', { infer: true }),
                 pass: configService.get('mail.password', { infer: true }),
             },
-        });
+        })
     }
 
     async sendMail({
@@ -27,15 +27,15 @@ export class MailerService {
         context,
         ...mailOptions
     }: nodemailer.SendMailOptions & {
-        templatePath: string;
-        context: Record<string, unknown>;
+        templatePath: string
+        context: Record<string, unknown>
     }): Promise<void> {
-        let html: string | undefined;
+        let html: string | undefined
         if (templatePath) {
-            const template = await fs.readFile(templatePath, 'utf-8');
+            const template = await fs.readFile(templatePath, 'utf-8')
             html = Handlebars.compile(template, {
                 strict: true,
-            })(context);
+            })(context)
         }
 
         await this.transporter.sendMail({
@@ -48,6 +48,6 @@ export class MailerService {
                       infer: true,
                   })}>`,
             html: mailOptions.html ? mailOptions.html : html,
-        });
+        })
     }
 }

@@ -1,31 +1,26 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-    IsNumber,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from 'class-validator';
-import { Transform, Type, plainToInstance } from 'class-transformer';
-import { User } from '../domain/user';
-import { RoleDto } from '../../roles/dto/role.dto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { plainToInstance, Transform, Type } from 'class-transformer'
+import { IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { RoleDto } from '~/roles/dto/role.dto'
+import { User } from '~/users/domain/user'
 
 export class FilterUserDto {
     @ApiPropertyOptional({ type: RoleDto })
     @IsOptional()
     @ValidateNested({ each: true })
     @Type(() => RoleDto)
-    roles?: RoleDto[] | null;
+    roles?: RoleDto[] | null
 }
 
 export class SortUserDto {
     @ApiProperty()
     @Type(() => String)
     @IsString()
-    orderBy: keyof User;
+    orderBy: keyof User
 
     @ApiProperty()
     @IsString()
-    order: string;
+    order: string
 }
 
 export class QueryUserDto {
@@ -33,31 +28,27 @@ export class QueryUserDto {
     @Transform(({ value }) => (value ? Number(value) : 1))
     @IsNumber()
     @IsOptional()
-    page?: number;
+    page?: number
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (value ? Number(value) : 10))
     @IsNumber()
     @IsOptional()
-    limit?: number;
+    limit?: number
 
     @ApiPropertyOptional({ type: String })
     @IsOptional()
-    @Transform(({ value }) =>
-        value ? plainToInstance(FilterUserDto, JSON.parse(value)) : undefined,
-    )
+    @Transform(({ value }) => (value ? plainToInstance(FilterUserDto, JSON.parse(value)) : undefined))
     @ValidateNested()
     @Type(() => FilterUserDto)
-    filters?: FilterUserDto | null;
+    filters?: FilterUserDto | null
 
     @ApiPropertyOptional({ type: String })
     @IsOptional()
     @Transform(({ value }) => {
-        return value
-            ? plainToInstance(SortUserDto, JSON.parse(value))
-            : undefined;
+        return value ? plainToInstance(SortUserDto, JSON.parse(value)) : undefined
     })
     @ValidateNested({ each: true })
     @Type(() => SortUserDto)
-    sort?: SortUserDto[] | null;
+    sort?: SortUserDto[] | null
 }

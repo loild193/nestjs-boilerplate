@@ -1,9 +1,9 @@
 {
     "markdown.extension.toc.levels": "2..6",
     "markdown.extension.orderedList.autoRenumber": false,
-    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": "always"
     },
     "editor.formatOnSave": true
 }

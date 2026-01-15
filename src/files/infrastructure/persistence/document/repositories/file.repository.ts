@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
-
-import { FileRepository } from '../../file.repository';
-import { FileSchemaClass } from '../entities/file.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { FileType } from '../../../../domain/file';
-
-import { FileMapper } from '../mappers/file.mapper';
-import { NullableType } from '../../../../../utils/types/nullable.type';
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import { FileType } from '~/files/domain/file'
+import { FileSchemaClass } from '~/files/infrastructure/persistence/document/entities/file.schema'
+import { FileMapper } from '~/files/infrastructure/persistence/document/mappers/file.mapper'
+import { FileRepository } from '~/files/infrastructure/persistence/file.repository'
+import { NullableType } from '~/utils/types/nullable.type'
 
 @Injectable()
 export class FileDocumentRepository implements FileRepository {
@@ -17,18 +15,18 @@ export class FileDocumentRepository implements FileRepository {
     ) {}
 
     async create(data: Omit<FileType, 'id'>): Promise<FileType> {
-        const createdFile = new this.fileModel(data);
-        const fileObject = await createdFile.save();
-        return FileMapper.toDomain(fileObject);
+        const createdFile = new this.fileModel(data)
+        const fileObject = await createdFile.save()
+        return FileMapper.toDomain(fileObject)
     }
 
     async findById(id: FileType['id']): Promise<NullableType<FileType>> {
-        const fileObject = await this.fileModel.findById(id);
-        return fileObject ? FileMapper.toDomain(fileObject) : null;
+        const fileObject = await this.fileModel.findById(id)
+        return fileObject ? FileMapper.toDomain(fileObject) : null
     }
 
     async findByIds(ids: FileType['id'][]): Promise<FileType[]> {
-        const fileObjects = await this.fileModel.find({ _id: { $in: ids } });
-        return fileObjects.map((fileObject) => FileMapper.toDomain(fileObject));
+        const fileObjects = await this.fileModel.find({ _id: { $in: ids } })
+        return fileObjects.map((fileObject) => FileMapper.toDomain(fileObject))
     }
 }

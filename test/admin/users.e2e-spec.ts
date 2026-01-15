@@ -1,27 +1,27 @@
-import { APP_URL, ADMIN_EMAIL, ADMIN_PASSWORD } from '../utils/constants';
-import request from 'supertest';
-import { RoleEnum } from '../../src/roles/roles.enum';
-import { StatusEnum } from '../../src/statuses/statuses.enum';
+import request from 'supertest'
+import { RoleEnum } from '../../src/roles/roles.enum'
+import { StatusEnum } from '../../src/statuses/statuses.enum'
+import { ADMIN_EMAIL, ADMIN_PASSWORD, APP_URL } from '../utils/constants'
 
 describe('Users Module', () => {
-    const app = APP_URL;
-    let apiToken;
+    const app = APP_URL
+    let apiToken
 
     beforeAll(async () => {
         await request(app)
             .post('/api/v1/auth/email/login')
             .send({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD })
             .then(({ body }) => {
-                apiToken = body.token;
-            });
-    });
+                apiToken = body.token
+            })
+    })
 
     describe('Update', () => {
-        let newUser;
-        const newUserEmail = `user-first.${Date.now()}@example.com`;
-        const newUserChangedEmail = `user-first-changed.${Date.now()}@example.com`;
-        const newUserPassword = `secret`;
-        const newUserChangedPassword = `new-secret`;
+        let newUser
+        const newUserEmail = `user-first.${Date.now()}@example.com`
+        const newUserChangedEmail = `user-first-changed.${Date.now()}@example.com`
+        const newUserPassword = `secret`
+        const newUserChangedPassword = `new-secret`
 
         beforeAll(async () => {
             await request(app)
@@ -31,15 +31,15 @@ describe('Users Module', () => {
                     password: newUserPassword,
                     firstName: `First${Date.now()}`,
                     lastName: 'E2E',
-                });
+                })
 
             await request(app)
                 .post('/api/v1/auth/email/login')
                 .send({ email: newUserEmail, password: newUserPassword })
                 .then(({ body }) => {
-                    newUser = body.user;
-                });
-        });
+                    newUser = body.user
+                })
+        })
 
         describe('User with "Admin" role', () => {
             it('should change password for existing user: /api/v1/users/:id (PATCH)', () => {
@@ -52,8 +52,8 @@ describe('Users Module', () => {
                         email: newUserChangedEmail,
                         password: newUserChangedPassword,
                     })
-                    .expect(200);
-            });
+                    .expect(200)
+            })
 
             describe('Guest', () => {
                 it('should login with changed password: /api/v1/auth/email/login (POST)', () => {
@@ -65,16 +65,16 @@ describe('Users Module', () => {
                         })
                         .expect(200)
                         .expect(({ body }) => {
-                            expect(body.token).toBeDefined();
-                        });
-                });
-            });
-        });
-    });
+                            expect(body.token).toBeDefined()
+                        })
+                })
+            })
+        })
+    })
 
     describe('Create', () => {
-        const newUserByAdminEmail = `user-created-by-admin.${Date.now()}@example.com`;
-        const newUserByAdminPassword = `secret`;
+        const newUserByAdminEmail = `user-created-by-admin.${Date.now()}@example.com`
+        const newUserByAdminPassword = `secret`
 
         describe('User with "Admin" role', () => {
             it('should fail to create new user with invalid email: /api/v1/users (POST)', () => {
@@ -84,8 +84,8 @@ describe('Users Module', () => {
                         type: 'bearer',
                     })
                     .send({ email: 'fail-data' })
-                    .expect(422);
-            });
+                    .expect(422)
+            })
 
             it('should successfully create new user: /api/v1/users (POST)', () => {
                 return request(app)
@@ -105,8 +105,8 @@ describe('Users Module', () => {
                             id: StatusEnum.active,
                         },
                     })
-                    .expect(201);
-            });
+                    .expect(201)
+            })
 
             describe('Guest', () => {
                 it('should successfully login via created by admin user: /api/v1/auth/email/login (GET)', () => {
@@ -118,12 +118,12 @@ describe('Users Module', () => {
                         })
                         .expect(200)
                         .expect(({ body }) => {
-                            expect(body.token).toBeDefined();
-                        });
-                });
-            });
-        });
-    });
+                            expect(body.token).toBeDefined()
+                        })
+                })
+            })
+        })
+    })
 
     describe('Get many', () => {
         describe('User with "Admin" role', () => {
@@ -136,12 +136,12 @@ describe('Users Module', () => {
                     .expect(200)
                     .send()
                     .expect(({ body }) => {
-                        expect(body.data[0].provider).toBeDefined();
-                        expect(body.data[0].email).toBeDefined();
-                        expect(body.data[0].hash).not.toBeDefined();
-                        expect(body.data[0].password).not.toBeDefined();
-                    });
-            });
-        });
-    });
-});
+                        expect(body.data[0].provider).toBeDefined()
+                        expect(body.data[0].email).toBeDefined()
+                        expect(body.data[0].hash).not.toBeDefined()
+                        expect(body.data[0].password).not.toBeDefined()
+                    })
+            })
+        })
+    })
+})

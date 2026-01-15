@@ -1,16 +1,9 @@
-import {
-    Body,
-    Controller,
-    HttpCode,
-    HttpStatus,
-    Post,
-    SerializeOptions,
-} from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthService } from '../auth/auth.service';
-import { AuthAppleService } from './auth-apple.service';
-import { AuthAppleLoginDto } from './dto/auth-apple-login.dto';
-import { LoginResponseDto } from '../auth/dto/login-response.dto';
+import { Body, Controller, HttpCode, HttpStatus, Post, SerializeOptions } from '@nestjs/common'
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { AuthService } from '~/auth/auth.service'
+import { LoginResponseDto } from '~/auth/dto/login-response.dto'
+import { AuthAppleService } from '~/auth-apple/auth-apple.service'
+import { AuthAppleLoginDto } from '~/auth-apple/dto/auth-apple-login.dto'
 
 @ApiTags('Auth')
 @Controller({
@@ -31,12 +24,9 @@ export class AuthAppleController {
     })
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(
-        @Body() loginDto: AuthAppleLoginDto,
-    ): Promise<LoginResponseDto> {
-        const socialData =
-            await this.authAppleService.getProfileByToken(loginDto);
+    async login(@Body() loginDto: AuthAppleLoginDto): Promise<LoginResponseDto> {
+        const socialData = await this.authAppleService.getProfileByToken(loginDto)
 
-        return this.authService.validateSocialLogin('apple', socialData);
+        return this.authService.validateSocialLogin('apple', socialData)
     }
 }

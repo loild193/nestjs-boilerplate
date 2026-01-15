@@ -1,15 +1,11 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { FileSchema, FileSchemaClass } from './entities/file.schema';
-import { FileRepository } from '../file.repository';
-import { FileDocumentRepository } from './repositories/file.repository';
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import { FileSchema, FileSchemaClass } from '~/files/infrastructure/persistence/document/entities/file.schema'
+import { FileDocumentRepository } from '~/files/infrastructure/persistence/document/repositories/file.repository'
+import { FileRepository } from '~/files/infrastructure/persistence/file.repository'
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: FileSchemaClass.name, schema: FileSchema },
-        ]),
-    ],
+    imports: [MongooseModule.forFeature([{ name: FileSchemaClass.name, schema: FileSchema }])],
     providers: [
         {
             provide: FileRepository,

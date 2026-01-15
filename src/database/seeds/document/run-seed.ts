@@ -1,15 +1,14 @@
-import { NestFactory } from '@nestjs/core';
-import { UserSeedService } from './user/user-seed.service';
-
-import { SeedModule } from './seed.module';
+import { NestFactory } from '@nestjs/core'
+import { SeedModule } from '~/database/seeds/document/seed.module'
+import { UserSeedService } from '~/database/seeds/document/user/user-seed.service'
 
 const runSeed = async () => {
-    const app = await NestFactory.create(SeedModule);
+    const app = await NestFactory.create(SeedModule)
 
     // run
-    await app.get(UserSeedService).run();
+    await app.get(UserSeedService).run()
 
-    await app.close();
-};
+    await app.close()
+}
 
-void runSeed();
+void runSeed()

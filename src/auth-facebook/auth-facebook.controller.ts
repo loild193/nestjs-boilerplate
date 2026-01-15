@@ -1,16 +1,9 @@
-import {
-    Body,
-    Controller,
-    HttpCode,
-    HttpStatus,
-    Post,
-    SerializeOptions,
-} from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthService } from '../auth/auth.service';
-import { AuthFacebookService } from './auth-facebook.service';
-import { AuthFacebookLoginDto } from './dto/auth-facebook-login.dto';
-import { LoginResponseDto } from '../auth/dto/login-response.dto';
+import { Body, Controller, HttpCode, HttpStatus, Post, SerializeOptions } from '@nestjs/common'
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
+import { AuthService } from '~/auth/auth.service'
+import { LoginResponseDto } from '~/auth/dto/login-response.dto'
+import { AuthFacebookService } from '~/auth-facebook/auth-facebook.service'
+import { AuthFacebookLoginDto } from '~/auth-facebook/dto/auth-facebook-login.dto'
 
 @ApiTags('Auth')
 @Controller({
@@ -31,12 +24,9 @@ export class AuthFacebookController {
     })
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(
-        @Body() loginDto: AuthFacebookLoginDto,
-    ): Promise<LoginResponseDto> {
-        const socialData =
-            await this.authFacebookService.getProfileByToken(loginDto);
+    async login(@Body() loginDto: AuthFacebookLoginDto): Promise<LoginResponseDto> {
+        const socialData = await this.authFacebookService.getProfileByToken(loginDto)
 
-        return this.authService.validateSocialLogin('facebook', socialData);
+        return this.authService.validateSocialLogin('facebook', socialData)
     }
 }
