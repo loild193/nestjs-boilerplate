@@ -1,0 +1,113 @@
+services:
+    postgres:
+        container_name: api_postgres_dev
+        image: postgres:17.6-alpine
+        logging:
+            driver: json-file
+            options:
+                max-size: '50m'
+                max-file: '2'
+        restart: 'no'
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready', '-U', '${DATABASE_USERNAME}', '-d', '${DATABASE_NAME}']
+            interval: 5s
+            timeout: 10s
+            retries: 5
+        environment:
+            TERM: linux
+            LANG: 'C.UTF-8'
+            LOG_ROTATION_DAY: 7
+            POSTGRES_USER: ${DATABASE_USERNAME}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
+        ports:
+            - 127.0.0.1:${DATABASE_PORT}:5432
+        volumes:
+            - boilerplate-db:/var/lib/postgresql/data
+        networks:
+            - dev_api_network
+
+    maildev:
+        container_name: api_mail_dev
+        build:
+            context: .
+            dockerfile: maildev.Dockerfile
+        ports:
+            - ${MAIL_CLIENT_PORT}:1080
+            - ${MAIL_PORT}:1025
+        networks:
+            - dev_api_network
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
+        networks:
+            - dev_api_network
+
+    # Uncomment to use redis
+    redis:
+        container_name: api_redis_dev
+        image: redis:7.0-alpine
+        command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_AUTH_PASSWORD}
+        privileged: true
+        sysctls:
+            net.core.somaxconn: '511'
+        environment:
+            TERM: linux
+            LANG: 'C.UTF-8'
+            LOG_ROTATION_DAY: 7
+        dns:
+        - 1.1.1.1
+        logging:
+            driver: json-file
+            options:
+                max-size: '50m'
+                max-file: '2'
+        restart: 'no'
+        healthcheck:
+            test: ['CMD', 'redis-cli', '-a', '${REDIS_AUTH_PASSWORD}', 'ping']
+            interval: 5s
+            timeout: 10s
+            retries: 5
+        ports:
+            - 127.0.0.1:${REDIS_EXPOSED_PORT}:${REDIS_PORT}
+        volumes:
+            - ./volumes/redis:/data:delegated
+        networks:
+            - dev_api_network
+
+    api:
+        container_name: api_dev
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: builder
+        environment:
+            TERM: linux
+            LANG: 'C.UTF-8'
+            NODE_ENV: development
+        env_file:
+            - .env.development.docker
+        logging:
+            driver: json-file
+            options:
+                max-size: '50m'
+                max-file: '2'
+        restart: 'always'
+        volumes:
+            - ./src:/app/src
+            - ./package.json:/app/package.json
+            - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+        ports:
+            - ${APP_PORT}:${APP_PORT}
+        networks:
+            - dev_api_network
+
+volumes:
+    boilerplate-db:
+
+networks:
+    dev_api_network:
+        driver: bridge

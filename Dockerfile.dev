@@ -1,0 +1,50 @@
+FROM node:22.14.0-alpine AS pre-base
+
+RUN apk add --no-cache libc6-compat git curl
+RUN apk add --update --no-cache python3 build-base gcc && ln -sf /usr/bin/python3 /usr/bin/python
+
+WORKDIR /app
+
+ENV HUSKY=0 CI=true
+
+# Install dependencies based on the preferred package manager
+COPY package.json .npmrc pnpm-lock.yaml* ./
+RUN if [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i; \
+    else echo "Lockfile not found." && exit 1; \
+    fi
+
+# ----------------------------------------
+FROM pre-base AS build
+
+WORKDIR /app
+
+COPY --from=pre-base /app/node_modules ./node_modules
+COPY . .
+
+RUN pnpm i && pnpm build && npm install -g pm2
+
+# ----------------------------------------
+FROM pre-base AS release
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+RUN apk add --no-cache curl && \
+    addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001 && \
+    npm install -g pm2
+
+COPY --from=build --chown=nestjs:nodejs /app /app
+# COPY check-pm2-status.js /app/check-pm2-status.js
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["npm", "run", "start:prod"]
+
+# ----------------------------------------
+FROM build AS builder
+
+EXPOSE 8000
+
+CMD ["tail", "-f", "/dev/null"]
