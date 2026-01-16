@@ -25,5 +25,10 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "esModuleInterop": true
+    },
+    "watchOptions": {
+        "watchFile": "fixedPollingInterval",
+        "watchDirectory": "fixedPollingInterval",
+        "excludeDirectories": ["**/node_modules", "dist"]
     }
 }

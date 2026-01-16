@@ -59,7 +59,7 @@ services:
             LANG: 'C.UTF-8'
             LOG_ROTATION_DAY: 7
         dns:
-        - 1.1.1.1
+            - 1.1.1.1
         logging:
             driver: json-file
             options:
@@ -82,7 +82,7 @@ services:
         container_name: api_dev
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
             target: builder
         environment:
             TERM: linux
@@ -101,7 +101,7 @@ services:
             - ./package.json:/app/package.json
             - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
         ports:
-            - ${APP_PORT}:${APP_PORT}
+            - ${APP_EXPOSED_PORT}:${APP_PORT}
         networks:
             - dev_api_network
 

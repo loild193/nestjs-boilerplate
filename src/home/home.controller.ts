@@ -11,4 +11,9 @@ export class HomeController {
     appInfo() {
         return this.service.appInfo()
     }
+
+    @Get('/healthz')
+    healthCheck() {
+        return this.service.healthCheck()
+    }
 }

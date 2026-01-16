@@ -37,5 +37,8 @@ lerna-debug.log*
 .data
 /files
 .env
+.env.development.docker
+.env.production.docker
 /ormconfig.json
 .codegpt
+volumes
