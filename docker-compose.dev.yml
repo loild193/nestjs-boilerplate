@@ -89,7 +89,7 @@ services:
             LANG: 'C.UTF-8'
             NODE_ENV: development
         env_file:
-            - .env.development.docker
+            - .env.development.docker.local
         logging:
             driver: json-file
             options:
