@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserSeedService } from '~/database/seeds/document/user/user-seed.service'
+import { UserSeedService } from '~/database/seeds/relational/user/user-seed.service'
 import { UserEntity } from '~/users/infrastructure/persistence/relational/entities/user.entity'
 
 @Module({

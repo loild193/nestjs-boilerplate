@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
-import { SeedModule } from '~/database/seeds/document/seed.module'
 import { RoleSeedService } from '~/database/seeds/relational/role/role-seed.service'
+import { SeedModule } from '~/database/seeds/relational/seed.module'
 import { StatusSeedService } from '~/database/seeds/relational/status/status-seed.service'
 import { UserSeedService } from '~/database/seeds/relational/user/user-seed.service'
 
